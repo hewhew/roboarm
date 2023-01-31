@@ -1,8 +1,6 @@
 import androidx.compose.animation.animateContentSize
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -15,11 +13,19 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.withSave
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.loadImageBitmap
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.useResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.abs
+
 
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
@@ -63,7 +69,8 @@ fun cloudUI(content: ContentState) {
                     "СберАвтоТех",
                     "ЕАптека",
                     "Восстание машин",
-                    "Школа21"
+                    "Школа21",
+                    "KPACUBO"
                 )
             }
             val map = mapOf<String, Int>(
@@ -79,7 +86,8 @@ fun cloudUI(content: ContentState) {
                 "СберАвтоТех" to 17,
                 "ЕАптека" to 9,
                 "Восстание машин" to 12,
-                "Школа21" to 7
+                "Школа21" to 7,
+                "KPACUBO" to 7
             )
             LazyColumn(
                 state = listState,
@@ -120,6 +128,47 @@ fun cloudUI(content: ContentState) {
                             .clickable(onClick = { println("current" + index)
                                 content.kandinskyScreen(text, index, map.get(text)!!) })
                             .animateContentSize())
+                }
+            }
+        }
+        Row {
+            val robotics = remember {
+                val resourcePath = "drawable/logo/robotics.jpg"
+                println(resourcePath)
+                useResource(resourcePath, ::loadImageBitmap)
+            }
+            val ai = remember {
+                val resourcePath = "drawable/logo/ai.png"
+                println(resourcePath)
+                useResource(resourcePath, ::loadImageBitmap)
+            }
+            Canvas(
+                modifier = Modifier.width(300.dp)
+            ) {
+                drawIntoCanvas { canvas ->
+                    canvas.withSave {
+//                        println("bitmap " + size.width.toString() + " " + size.height)
+                        canvas.drawImageRect(
+                            robotics,
+                            dstSize = IntSize(size.width.toInt(), size.height.toInt()),
+                            paint = Paint()
+                        )
+                        canvas.translate(0f, 0f)
+                    }
+                }
+            }
+            Canvas(
+                modifier = Modifier.width(385.dp)
+            ) {
+                drawIntoCanvas { canvas ->
+                    canvas.withSave {
+                        canvas.drawImageRect(
+                            ai,
+                            dstSize = IntSize(size.width.toInt(), size.height.toInt()),
+                            paint = Paint()
+                        )
+                        canvas.translate(0f, 0f)
+                    }
                 }
             }
         }
