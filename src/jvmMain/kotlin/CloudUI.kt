@@ -9,6 +9,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -113,62 +114,60 @@ fun cloudUI(content: ContentState) {
                 )
 
                 val composableScope = rememberCoroutineScope()
-
-                LazyColumn(
-                    state = listState,
+                Column( modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = verticalPadding),
-                    modifier = Modifier
-                        .height(500.dp)
-                        .pointerInput(Unit) {
-                            detectDragGestures { change, dragAmount ->
-                                composableScope.launch {
-                                    listState.animateScrollToItem(
-                                        listState.firstVisibleItemIndex - dragAmount.y.toInt(),
-                                        listState.firstVisibleItemScrollOffset - dragAmount.y.toInt()
-                                    )
-                                }
-                            }
-                        }
-                ) {
-                    items(Int.MAX_VALUE) { globalIndex ->
-                        val index = globalIndex % homeScreenItems.size
-                        val opacity by remember(columnHalfSize) {
-                            derivedStateOf {
-                                var length = listState.layoutInfo.visibleItemsInfo.size
-                                if (length > 0) {
-                                    var mid = length.div(2).toFloat()
-                                    var pos = globalIndex - listState.firstVisibleItemIndex + 1
-                                    if (length.mod(2) == 0) {
-                                        mid -= 0.5f
-                                    }
-                                    var res = mid / (mid + abs(mid - pos.toFloat()))
-//                                println("length " + length.toString() + " mid " + mid + " pos " + pos + " res " + res)
-                                    res
-                                } else 0f
-                            }
-                        }
-                        val text = homeScreenItems[index]
-                        Text(
-                            text = AnnotatedString(text = text),
-                            fontSize = 30.sp,
-                            color = Color.White,
-                            modifier = Modifier
-                                .alpha(opacity)
-                                .scale(opacity)
-                                .clickable(onClick = {
-                                    println("current" + index)
-                                    content.kandinskyScreen(text, index, map[text]!!)
-                                })
-                                .pointerInput(Unit) {
-                                    detectTapGestures {
-                                        println("current" + index)
-                                        content.kandinskyScreen(text, index, map[text]!!)
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    var cenerObj = mutableStateOf(Pair("",0))
+                    LazyColumn(
+                        state = listState,
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = verticalPadding),
+                        modifier = Modifier
+                            .height(500.dp)
+                            .pointerInput(Unit) {
+                                detectDragGestures { change, dragAmount ->
+                                    composableScope.launch {
+                                        listState.animateScrollToItem(
+                                            listState.firstVisibleItemIndex - dragAmount.y.toInt(),
+                                            listState.firstVisibleItemScrollOffset - dragAmount.y.toInt()
+                                        )
                                     }
                                 }
-                                .animateContentSize()
-                        )
+                            }
+                    ) {
+                        items(Int.MAX_VALUE) { globalIndex ->
+                            val index = globalIndex % homeScreenItems.size
+                            val opacity by remember(columnHalfSize) {
+                                derivedStateOf {
+                                    var length = listState.layoutInfo.visibleItemsInfo.size
+                                    if (length > 0) {
+                                        var pos = globalIndex - listState.firstVisibleItemIndex + 1
+                                        if (pos.equals(8)) {
+                                            cenerObj.value =Pair(homeScreenItems[index], index)
+                                            return@derivedStateOf 1f
+                                        } else return@derivedStateOf 0.5f
+                                    } else 0f
+                                }
+                            }
+                            val text = homeScreenItems[index]
+                            Text(
+                                text = AnnotatedString(text = text),
+                                fontSize = 30.sp,
+                                color = Color.White,
+                                modifier = Modifier
+                                    .alpha(opacity)
+                                    .scale(opacity)
+                                    .animateContentSize()
+                            )
+                        }
+                    }
+                    Spacer(Modifier.size(50.dp))
+                    Button(onClick = {
+                        println("current" + cenerObj.value.second)
+                        content.kandinskyScreen(cenerObj.value.first, cenerObj.value.second, map[cenerObj.value.first]!!)
+                    }) {
+                        Text(text = "Рисовать")
                     }
                 }
             }
