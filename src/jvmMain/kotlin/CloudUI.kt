@@ -62,35 +62,63 @@ fun cloudUI(content: ContentState) {
                 val listState = rememberLazyListState(Int.MAX_VALUE / 2)
                 val (columnHalfSize, setColumnHalfSize) = remember { mutableStateOf<Int?>(null) }
                 val verticalPadding = 0.dp
+//                val homeScreenItems = remember {
+//                    listOf(
+//                        "СберЗдоровье",
+//                        "СберЛогистика",
+//                        "SberPortal",
+//                        "SberShop",
+//                        "МРИЯ",
+//                        "ОККО",
+//                        "СберОбразование",
+//                        "СберМаркет",
+//                        "СберЗвук",
+//                        "СберАвтоТех",
+//                        "ЕАптека",
+//                        "Школа21"
+//                    )
+//                }
                 val homeScreenItems = remember {
                     listOf(
-                        "СберЗдоровье",
-                        "СберЛогистика",
-                        "SberPortal",
-                        "SberShop",
+                        "Биометрия",
                         "МРИЯ",
                         "ОККО",
-                        "СберОбразование",
-                        "СберМаркет",
-                        "СберЗвук",
                         "СберАвтоТех",
-                        "ЕАптека",
-                        "Школа21"
+                        "SberDevices",
+                        "СберЕАптека",
+                        "СберЗдоровье",
+                        "СберСтрахование",
+                        "СберЛогистика",
+                        "СберМаркет",
+                        "SberShop",
+                        "СберСпикер",
+                        "СберПереводчик",
+                        "СберТранспорт",
+                        "Школа21",
+                        "СберЗвук",
+                        "СовТех",
+                        "СТК"
                     )
                 }
                 val map = mapOf<String, Int>(
-                    "СберЗдоровье" to 23,
-                    "СберЛогистика" to 21,
-                    "SberPortal" to 13,
-                    "SberShop" to 14,
-                    "МРИЯ" to 17,
-                    "ОККО" to 12,
-                    "СберОбразование" to 32,
-                    "СберМаркет" to 15,
-                    "СберЗвук" to 28,
-                    "СберАвтоТех" to 17,
-                    "ЕАптека" to 9,
-                    "Школа21" to 7
+                    "Биометрия" to 1,
+                    "МРИЯ" to 3,
+                    "ОККО" to 3,
+                    "СберАвтоТех" to 2,
+                    "SberDevices" to 3,
+                    "СберЕАптека" to 3,
+                    "СберЗдоровье" to 2,
+                    "СберСтрахование" to 4,
+                    "СберЛогистика" to 3,
+                    "СберМаркет" to 3,
+                    "SberShop" to 3,
+                    "СберСпикер" to 1,
+                    "СберПереводчик" to 2,
+                    "СберТранспорт" to 2,
+                    "Школа21" to 3,
+                    "СберЗвук" to 3,
+                    "СовТех" to 1,
+                    "СТК" to 1
                 )
 
                 val composableScope = rememberCoroutineScope()

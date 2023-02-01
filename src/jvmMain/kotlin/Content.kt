@@ -35,7 +35,7 @@ object ContentState {
         index: Int,
         max: Int
     ) {
-        val nextInt = Random.nextInt(1,max)
+        val nextInt = if (max>1)  Random.nextInt(1,max) else max
         println("rand" + nextInt)
         val dir = "drawable/svg/" + index + "/" + nextInt + ".svg"
         val content = useResource(dir) {
