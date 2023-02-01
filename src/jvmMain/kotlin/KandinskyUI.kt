@@ -4,9 +4,8 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -18,6 +17,7 @@ import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.res.loadSvgPainter
 import androidx.compose.ui.res.useResource
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import com.github.kittinunf.fuel.Fuel
 import kotlinx.coroutines.*
 
@@ -41,8 +41,18 @@ fun kandinskyUI(content: ContentState) {
         useResource(resourcePath) { loadSvgPainter(it, density) }
     }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Box {
+    Column(modifier = Modifier.background(
+        brush = Brush.linearGradient(
+            colors = listOf(
+                Color(33, 160, 56, 255),
+                Color(163, 205, 57, 255),
+                Color(163, 205, 57, 255),
+                Color(15, 168, 224, 255),
+                Color(121, 138, 203, 255)
+            )
+        )
+    ).fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+        Box(Modifier.width(720.dp).height(720.dp)) {
             Canvas(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -64,13 +74,13 @@ fun kandinskyUI(content: ContentState) {
 fun startRepeatingJob(timeInterval: Long, content: ContentState): Job {
     return CoroutineScope(Dispatchers.Default).launch {
         while (NonCancellable.isActive) {
+            delay(timeInterval)
             println("status check")
             val (request, response, result) = Fuel.get("http://localhost:8080/robot/info").responseString()
             if(result.get().contains("drawing done")) {
                 content.cloudScreeen()
                 this.cancel()
             }
-            delay(timeInterval)
         }
     }
 }

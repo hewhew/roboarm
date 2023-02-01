@@ -25,7 +25,7 @@ fun main() = application {
         title = "SberArm",
         state = WindowState(
             position = WindowPosition.Aligned(Alignment.Center),
-            size = getPreferredWindowSize(800, 1000)
+            size = getPreferredWindowSize(720, 1280)
         ),
     ) {
         MaterialTheme {
