@@ -1,6 +1,10 @@
 import androidx.compose.animation.animateContentSize
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -12,16 +16,14 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.loadImageBitmap
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.useResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 
@@ -73,7 +75,6 @@ fun cloudUI(content: ContentState) {
                         "СберЗвук",
                         "СберАвтоТех",
                         "ЕАптека",
-                        "Восстание машин",
                         "Школа21"
                     )
                 }
@@ -89,9 +90,11 @@ fun cloudUI(content: ContentState) {
                     "СберЗвук" to 28,
                     "СберАвтоТех" to 17,
                     "ЕАптека" to 9,
-                    "Восстание машин" to 12,
                     "Школа21" to 7
                 )
+
+                val composableScope = rememberCoroutineScope()
+
                 LazyColumn(
                     state = listState,
                     verticalArrangement = Arrangement.Center,
@@ -99,7 +102,10 @@ fun cloudUI(content: ContentState) {
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = verticalPadding),
                     modifier = Modifier
                         .height(500.dp)
-                        .verticalScroll(rememberScrollState())
+                        .pointerInput(Unit) {
+                            detectDragGestures { change, dragAmount -> composableScope.launch {
+                                listState.animateScrollToItem(listState.firstVisibleItemIndex-dragAmount.y.toInt(), listState.firstVisibleItemScrollOffset-dragAmount.y.toInt())} }
+                        }
                 ) {
                     items(Int.MAX_VALUE) { globalIndex ->
                         val index = globalIndex % homeScreenItems.size
