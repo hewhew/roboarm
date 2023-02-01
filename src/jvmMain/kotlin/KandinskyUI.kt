@@ -4,8 +4,11 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -15,6 +18,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.res.loadSvgPainter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.useResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -77,7 +81,7 @@ fun startRepeatingJob(timeInterval: Long, content: ContentState): Job {
             delay(timeInterval)
             println("status check")
             val (request, response, result) = Fuel.get("http://localhost:8090/robot/info").responseString()
-            if(result.get().contains("drawing done")) {
+            if (result.get().contains("drawing done")) {
                 content.cloudScreeen()
                 this.cancel()
             }

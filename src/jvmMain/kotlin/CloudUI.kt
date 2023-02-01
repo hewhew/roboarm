@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -33,21 +34,27 @@ import kotlin.math.abs
 @Preview
 fun cloudUI(content: ContentState) {
     Scaffold(bottomBar = {
-        Image(
-            painter = painterResource("drawable/logo/watermark.png"),
-            contentDescription = null,
-            modifier = Modifier.size(150.dp).offset(5.dp, 35.dp)
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Image(
+                painter = painterResource("drawable/logo/watermark.png"),
+                contentDescription = null,
+                modifier = Modifier.size(150.dp)
+            )
+        }
     }) {
         Column(
             modifier = Modifier.fillMaxSize().background(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        Color(33, 160, 56, 255),
-                        Color(163, 205, 57, 255),
-                        Color(163, 205, 57, 255),
+                        Color(121, 138, 203, 255),
                         Color(15, 168, 224, 255),
-                        Color(121, 138, 203, 255)
+                        Color(163, 205, 57, 255),
+                        Color(163, 205, 57, 255),
+                        Color(33, 160, 56, 255)
                     )
                 )
             ),
@@ -62,22 +69,6 @@ fun cloudUI(content: ContentState) {
                 val listState = rememberLazyListState(Int.MAX_VALUE / 2)
                 val (columnHalfSize, setColumnHalfSize) = remember { mutableStateOf<Int?>(null) }
                 val verticalPadding = 0.dp
-//                val homeScreenItems = remember {
-//                    listOf(
-//                        "СберЗдоровье",
-//                        "СберЛогистика",
-//                        "SberPortal",
-//                        "SberShop",
-//                        "МРИЯ",
-//                        "ОККО",
-//                        "СберОбразование",
-//                        "СберМаркет",
-//                        "СберЗвук",
-//                        "СберАвтоТех",
-//                        "ЕАптека",
-//                        "Школа21"
-//                    )
-//                }
                 val homeScreenItems = remember {
                     listOf(
                         "Биометрия",
@@ -131,8 +122,14 @@ fun cloudUI(content: ContentState) {
                     modifier = Modifier
                         .height(500.dp)
                         .pointerInput(Unit) {
-                            detectDragGestures { change, dragAmount -> composableScope.launch {
-                                listState.animateScrollToItem(listState.firstVisibleItemIndex-dragAmount.y.toInt(), listState.firstVisibleItemScrollOffset-dragAmount.y.toInt())} }
+                            detectDragGestures { change, dragAmount ->
+                                composableScope.launch {
+                                    listState.animateScrollToItem(
+                                        listState.firstVisibleItemIndex - dragAmount.y.toInt(),
+                                        listState.firstVisibleItemScrollOffset - dragAmount.y.toInt()
+                                    )
+                                }
+                            }
                         }
                 ) {
                     items(Int.MAX_VALUE) { globalIndex ->
@@ -164,6 +161,12 @@ fun cloudUI(content: ContentState) {
                                     println("current" + index)
                                     content.kandinskyScreen(text, index, map[text]!!)
                                 })
+                                .pointerInput(Unit) {
+                                    detectTapGestures {
+                                        println("current" + index)
+                                        content.kandinskyScreen(text, index, map[text]!!)
+                                    }
+                                }
                                 .animateContentSize()
                         )
                     }

@@ -6,10 +6,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.WindowPosition
-import androidx.compose.ui.window.WindowState
-import androidx.compose.ui.window.application
+import androidx.compose.ui.window.*
 import java.awt.Dimension
 import java.awt.Toolkit
 
@@ -22,10 +19,12 @@ fun main() = application {
     }
     Window(
         onCloseRequest = ::exitApplication,
+        undecorated= true,
         title = "SberArm",
         state = WindowState(
+            placement = WindowPlacement.Fullscreen,
             position = WindowPosition.Aligned(Alignment.Center),
-            size = getPreferredWindowSize(720, 1280)
+//            size = getPreferredWindowSize(720, 1280)
         ),
     ) {
         MaterialTheme {
