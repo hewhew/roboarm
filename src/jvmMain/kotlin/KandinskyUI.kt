@@ -76,7 +76,7 @@ fun startRepeatingJob(timeInterval: Long, content: ContentState): Job {
         while (NonCancellable.isActive) {
             delay(timeInterval)
             println("status check")
-            val (request, response, result) = Fuel.get("http://localhost:8080/robot/info").responseString()
+            val (request, response, result) = Fuel.get("http://localhost:8090/robot/info").responseString()
             if(result.get().contains("drawing done")) {
                 content.cloudScreeen()
                 this.cancel()
@@ -95,8 +95,8 @@ fun bitmap(sample: ImageBitmap) {
     }
     AnimatedVisibility(
         visibleState = editable,
-        enter = fadeIn(tween(20000)),
-        exit = fadeOut(tween(20000))
+        enter = fadeIn(tween(60000)),
+        exit = fadeOut(tween(60000))
     ) {
         Canvas(
             modifier = Modifier.fillMaxSize()
