@@ -8,13 +8,16 @@ import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -41,7 +44,9 @@ fun cloudUI(content: ContentState) {
             Image(
                 painter = painterResource("drawable/logo/watermark.png"),
                 contentDescription = null,
-                modifier = Modifier.size(150.dp)
+                modifier = Modifier.size(150.dp).blur(radius = 0.2.dp, edgeTreatment = BlurredEdgeTreatment(
+                    RoundedCornerShape(8.dp)
+                ))
             )
         }
     }) {
@@ -112,19 +117,18 @@ fun cloudUI(content: ContentState) {
                 )
 
                 val composableScope = rememberCoroutineScope()
-                var dragEventsCount = 0;
+                var dragEventsCount = mutableStateOf(0);
                 val dragScope = rememberDraggableState(onDelta = { delta ->
-                    println(delta)
-                    if (abs(delta) <= 1f) {
-                        composableScope.launch {
-                            dragEventsCount += 1
-                            if (dragEventsCount > 1) {
-                                listState.animateScrollToItem(
-                                    listState.firstVisibleItemIndex - delta.toInt(),
-                                    listState.firstVisibleItemScrollOffset - delta.toInt()
-                                )
-                            }
+                    composableScope.launch {
+                        dragEventsCount.value += 1
+                        println("count " + dragEventsCount.value)
+                        if (dragEventsCount.value > 1) {
+                            listState.animateScrollToItem(
+                                listState.firstVisibleItemIndex - (delta * 0.6).toInt(),
+                                listState.firstVisibleItemScrollOffset - (delta * 0.6).toInt()
+                            )
                         }
+
                     }
                 })
 
@@ -135,15 +139,6 @@ fun cloudUI(content: ContentState) {
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = verticalPadding),
                     modifier = Modifier
                         .height(500.dp)
-                        .draggable(
-                            onDragStarted = { println("start") },
-                            onDragStopped = {
-                                println("stopped")
-                                dragEventsCount = 0
-                            },
-                            state = dragScope,
-                            orientation = Orientation.Vertical
-                        )
 //                        .pointerInput(Unit) {
 //                            detectDragGestures { change, dragAmount ->
 //                                composableScope.launch {
@@ -173,25 +168,44 @@ fun cloudUI(content: ContentState) {
                             }
                         }
                         val text = homeScreenItems[index]
-                        Text(
-                            text = AnnotatedString(text = text),
-                            fontSize = 30.sp,
-                            color = Color.White,
-                            modifier = Modifier
-                                .alpha(opacity)
-                                .scale(opacity)
-                                .clickable(onClick = {
-                                    println("current" + index)
-                                    content.kandinskyScreen(text, index, map[text]!!)
-                                })
-                                .pointerInput(Unit) {
-                                    detectTapGestures {
-                                        println("current tap" + index)
+                        Row(
+                            modifier = Modifier.fillMaxWidth().draggable(
+                                onDragStarted = { println("start") },
+                                onDragStopped = {
+                                    println("stopped")
+                                    if (dragEventsCount.value <= 1) {
+                                        println("pseudodrag" + dragEventsCount)
                                         content.kandinskyScreen(text, index, map[text]!!)
                                     }
-                                }
-                                .animateContentSize()
-                        )
+                                    dragEventsCount.value = 0
+                                },
+                                state = dragScope,
+                                orientation = Orientation.Vertical
+                            ),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = AnnotatedString(text = text),
+                                fontSize = 30.sp,
+                                color = Color.White,
+                                modifier = Modifier
+                                    .alpha(opacity)
+                                    .scale(opacity)
+                                    .clickable(onClick = {
+                                        println("current" + index)
+                                        content.kandinskyScreen(text, index, map[text]!!)
+                                    })
+                                    .pointerInput(Unit) {
+                                        detectTapGestures {
+                                            println("current tap" + index)
+                                            content.kandinskyScreen(text, index, map[text]!!)
+                                        }
+                                    }
+
+                                    .animateContentSize()
+                            )
+                        }
                     }
                 }
             }
