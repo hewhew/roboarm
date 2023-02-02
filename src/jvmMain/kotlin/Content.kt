@@ -42,7 +42,7 @@ object ContentState {
             it.bufferedReader().lines().collect(Collectors.joining())
         }
         println("draw request")
-        Fuel.post("http://localhost:8090/robot/api/draw_binary?tool=green&erase=true")
+        Fuel.post("http://localhost:8090/robot/api/draw_binary?board=front&tool=black&erase=true")
             .header(Headers.CONTENT_TYPE, "image/svg+xml").body(content).response()
         startRepeatingJob(3000, content = this)
         this.setIndex(index)
