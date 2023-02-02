@@ -44,7 +44,7 @@ fun cloudUI(content: ContentState) {
             Image(
                 painter = painterResource("drawable/logo/watermark.png"),
                 contentDescription = null,
-                modifier = Modifier.size(150.dp).blur(radius = 0.2.dp, edgeTreatment = BlurredEdgeTreatment(
+                modifier = Modifier.size(300.dp).blur(radius = 0.2.dp, edgeTreatment = BlurredEdgeTreatment(
                     RoundedCornerShape(8.dp)
                 ))
             )
@@ -138,7 +138,7 @@ fun cloudUI(content: ContentState) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = verticalPadding),
                     modifier = Modifier
-                        .height(500.dp)
+                        .height(800.dp)
 //                        .pointerInput(Unit) {
 //                            detectDragGestures { change, dragAmount ->
 //                                composableScope.launch {
@@ -187,7 +187,7 @@ fun cloudUI(content: ContentState) {
                         ) {
                             Text(
                                 text = AnnotatedString(text = text),
-                                fontSize = 30.sp,
+                                fontSize = 45.sp,
                                 color = Color.White,
                                 modifier = Modifier
                                     .alpha(opacity)
