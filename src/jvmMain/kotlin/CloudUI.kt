@@ -43,7 +43,7 @@ fun cloudUI(content: ContentState) {
             Image(
                 painter = painterResource("drawable/logo/watermark.png"),
                 contentDescription = null,
-                modifier = Modifier.size(150.dp)
+                modifier = Modifier.size(300.dp)
             )
         }
     }) {
@@ -124,7 +124,7 @@ fun cloudUI(content: ContentState) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = verticalPadding),
                         modifier = Modifier
-                            .height(500.dp)
+                            .height(800.dp)
                             .pointerInput(Unit) {
                                 detectDragGestures { change, dragAmount ->
                                     composableScope.launch {
@@ -153,7 +153,7 @@ fun cloudUI(content: ContentState) {
                             val text = homeScreenItems[index]
                             Text(
                                 text = AnnotatedString(text = text),
-                                fontSize = 30.sp,
+                                fontSize = 45.sp,
                                 color = Color.White,
                                 modifier = Modifier
                                     .alpha(opacity)
@@ -167,7 +167,7 @@ fun cloudUI(content: ContentState) {
                         println("current" + cenerObj.value.second)
                         content.kandinskyScreen(cenerObj.value.first, cenerObj.value.second, map[cenerObj.value.first]!!)
                     },
-                        modifier = Modifier.width(150.dp).height(50.dp)) {
+                        modifier = Modifier.width(300.dp).height(100.dp)) {
                         Text(text = "Рисовать", fontSize = 20.sp)
                     }
                 }
