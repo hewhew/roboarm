@@ -19,10 +19,10 @@ fun main() = application {
     }
     Window(
         onCloseRequest = ::exitApplication,
-//        undecorated= true,
+        undecorated= true,
         title = "SberArm",
         state = WindowState(
-//            placement = WindowPlacement.Fullscreen,
+            placement = WindowPlacement.Fullscreen,
             position = WindowPosition.Aligned(Alignment.Center),
 //            size = getPreferredWindowSize(720, 1280)
         ),
