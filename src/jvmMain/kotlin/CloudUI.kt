@@ -166,8 +166,9 @@ fun cloudUI(content: ContentState) {
                     Button(onClick = {
                         println("current" + cenerObj.value.second)
                         content.kandinskyScreen(cenerObj.value.first, cenerObj.value.second, map[cenerObj.value.first]!!)
-                    }) {
-                        Text(text = "Рисовать")
+                    },
+                        modifier = Modifier.width(150.dp).height(50.dp)) {
+                        Text(text = "Рисовать", fontSize = 20.sp)
                     }
                 }
             }
