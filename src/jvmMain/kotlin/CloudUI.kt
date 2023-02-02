@@ -4,8 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -113,6 +112,21 @@ fun cloudUI(content: ContentState) {
                 )
 
                 val composableScope = rememberCoroutineScope()
+                var dragEventsCount = 0;
+                val dragScope = rememberDraggableState(onDelta = { delta ->
+                    println(delta)
+                    if (abs(delta) <= 1f) {
+                        composableScope.launch {
+                            dragEventsCount += 1
+                            if (dragEventsCount > 1) {
+                                listState.animateScrollToItem(
+                                    listState.firstVisibleItemIndex - delta.toInt(),
+                                    listState.firstVisibleItemScrollOffset - delta.toInt()
+                                )
+                            }
+                        }
+                    }
+                })
 
                 LazyColumn(
                     state = listState,
@@ -121,16 +135,25 @@ fun cloudUI(content: ContentState) {
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = verticalPadding),
                     modifier = Modifier
                         .height(500.dp)
-                        .pointerInput(Unit) {
-                            detectDragGestures { change, dragAmount ->
-                                composableScope.launch {
-                                    listState.animateScrollToItem(
-                                        listState.firstVisibleItemIndex - dragAmount.y.toInt(),
-                                        listState.firstVisibleItemScrollOffset - dragAmount.y.toInt()
-                                    )
-                                }
-                            }
-                        }
+                        .draggable(
+                            onDragStarted = { println("start") },
+                            onDragStopped = {
+                                println("stopped")
+                                dragEventsCount = 0
+                            },
+                            state = dragScope,
+                            orientation = Orientation.Vertical
+                        )
+//                        .pointerInput(Unit) {
+//                            detectDragGestures { change, dragAmount ->
+//                                composableScope.launch {
+//                                    listState.animateScrollToItem(
+//                                        listState.firstVisibleItemIndex - dragAmount.y.toInt(),
+//                                        listState.firstVisibleItemScrollOffset - dragAmount.y.toInt()
+//                                    )
+//                                }
+//                            }
+//                        }
                 ) {
                     items(Int.MAX_VALUE) { globalIndex ->
                         val index = globalIndex % homeScreenItems.size
@@ -163,7 +186,7 @@ fun cloudUI(content: ContentState) {
                                 })
                                 .pointerInput(Unit) {
                                     detectTapGestures {
-                                        println("current" + index)
+                                        println("current tap" + index)
                                         content.kandinskyScreen(text, index, map[text]!!)
                                     }
                                 }
